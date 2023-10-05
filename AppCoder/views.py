@@ -30,23 +30,54 @@ def inicio(request):
     
     return render(request, "appCoder/index.html")
 
-def cursos(request):
+# def cursos(request):
     
-    return render(request, "appCoder/cursos.html")
+#     return render(request, "appCoder/cursos.html")
 
-def profesores(request):
+# def profesores(request):
     
-    return render(request, "appCoder/profesores.html")
+#     return render(request, "appCoder/profesores.html")
 
 def estudiantes(request):
     
-    return render(request, "appCoder/estudiantes.html")
+    # return render(request, "appCoder/estudiantes.html")
+    
+    if request.method == "POST":
+ 
+            miFormulario = EstudianteFormulario(request.POST) # Aqui me llega la informacion del html
+            print(miFormulario)
+ 
+            if miFormulario.is_valid():
+                  informacion = miFormulario.cleaned_data
+                  estudiante = Estudiante (nombre=informacion["nombre"], apellido=informacion["apellido"], email=informacion["email"])
+                  estudiante.save()
+                  return render(request, "AppCoder/index.html")
+    else:
+        miFormulario = EstudianteFormulario()
+ 
+    return render(request, "AppCoder/estudiantes.html", {"miFormulario": miFormulario})
+    
 
 def entregables(request):
 
-    return render(request, "appCoder/entregables.html")
+    # return render(request, "appCoder/entregables.html")
+    
+    if request.method == "POST":
+ 
+            miFormulario = EntregableFormulario(request.POST) # Aqui me llega la informacion del html
+            print(miFormulario)
+ 
+            if miFormulario.is_valid():
+                  informacion = miFormulario.cleaned_data
+                  entregable = Entregables (nombre=informacion["nombre"], fechaDeEntrega=informacion("fecha de entrega"), entregado=informacion[" "])
+                  entregable.save()
+                  return render(request, "AppCoder/index.html")
+    else:
+        miFormulario = EntregableFormulario()
+ 
+    return render(request, "AppCoder/entregables.html", {"miFormulario": miFormulario})
 
-def cursoFormulario(request):
+def cursos(request):
  
       if request.method == "POST":
  
@@ -61,9 +92,9 @@ def cursoFormulario(request):
       else:
             miFormulario = CursoFormulario()
  
-      return render(request, "AppCoder/cursoFormulario.html", {"miFormulario": miFormulario})
+      return render(request, "AppCoder/cursos.html", {"miFormulario": miFormulario})
   
-def profesorFormulario(request):
+def profesores(request):
       
     if request.method == "POST":
           
@@ -86,7 +117,7 @@ def profesorFormulario(request):
         
         miFormulario= ProfesorFormulario() #formulario vacio para construir el html (esto revisarlo)
             
-    return render(request, "AppCoder/profesorFormulario.html", {"miFormulario":miFormulario})
+    return render(request, "AppCoder/profesores.html", {"miFormulario":miFormulario})
 
 
 def busquedaCamada(request):

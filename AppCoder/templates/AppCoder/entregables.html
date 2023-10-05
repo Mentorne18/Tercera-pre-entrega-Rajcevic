@@ -4,18 +4,25 @@
 
 {% block contenidoQueCambia %}
 
-<!-- Contenido específico de la página de Entregables -->
-<section class="deliverables">
-    <div class="container">
-        <h2>¡Entregables!</h2>
-        <p>Consulta los detalles de tus entregas y fechas límite.</p>
-        <ul>
-            <li>Entregas pendientes</li>
-            <li>Calendario de entregas</li>
-            <li>Instrucciones y requisitos</li>
-            <!-- Agrega más detalles de entregables aquí -->
-        </ul>
-    </div>
-</section>
+{% if miFormulario.errors %}
+
+    <p style="color: red;">Estan mal los datos, revisar.</p>
+
+    {% endif %}
+
+    <form action="" method="POST">{% csrf_token %}
+
+        <!-- Acá está la magia de Django -->
+
+        <table>
+
+            {{ miFormulario.as_table }}
+
+        </table>
+
+        <input type="submit" value="Enviar">
+
+
+    </form>
 
 {% endblock %}
