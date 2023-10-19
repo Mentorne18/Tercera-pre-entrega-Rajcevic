@@ -178,7 +178,7 @@ def editarProfesor(request, profesor_nombre):
         
         print(miFormulario)
         
-        if miFormulario.is_valid:  #esto es "si pasa la verificacion de django"
+        if miFormulario.is_valid():  #esto es "si pasa la verificacion de django"
             
             informacion = miFormulario.cleaned_data
             
@@ -189,7 +189,7 @@ def editarProfesor(request, profesor_nombre):
             
             profesor.save()
             
-            return render(request= "AppCoder/inicio.html") # Aca hacemos que vuelva al inicio despues de  editar
+            return render(request, "AppCoder/index.html") # Aca hacemos que vuelva al inicio despues de  editar
         
     #En caso de que no sea post:
     

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Profesor</title>
+</head>
+<body>
+    <h1>Editar Profesor</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ miFormulario.as_p }}
+
+        <input type="submit" value="Guardar Cambios">
+    </form>
+
+    <a href="{% url 'Inicio' %}">Volver al Inicio</a>
+</body>
+</html>
