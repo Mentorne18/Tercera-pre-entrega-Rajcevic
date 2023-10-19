@@ -14,4 +14,7 @@ urlpatterns = [
     #path("profesorFormulario/", views.profesorFormulario, name="ProfesorFormulario"),
     path("busquedaCamada/", views.busquedaCamada, name="BusquedaCamada"),
     path("buscar/", views.buscar),
+    path('leerProfesores', views.leerProfesores, name = "LeerProfesores"),
+    path('eliminarProfesor/<profesor_nombre>/', views.eliminarProfesor, name="EliminarProfesor"),
+    path("editarProfesor/<profesor_nombre>/", views.eliminarProfesor, name="EditarProfesor"),
 ]

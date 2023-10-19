@@ -140,3 +140,63 @@ def buscar(request):
         respuesta = "No enviaste datos"
     
     return HttpResponse(respuesta)
+
+
+def leerProfesores(request):
+
+      profesores = Profesor.objects.all() #trae todos los profesores
+
+      contexto= {"profesores":profesores} 
+
+      return render(request, "AppCoder/leerProfesores.html",contexto)
+
+
+def eliminarProfesor(request, profesor_nombre):
+ 
+    profesor = Profesor.objects.get(nombre=profesor_nombre)
+    profesor.delete()
+ 
+    # vuelvo al menú
+    profesores = Profesor.objects.all()  # trae todos los profesores
+ 
+    contexto = {"profesores": profesores}
+ 
+    return render(request, "AppCoder/leerProfesores.html", contexto)
+
+
+def editarProfesor(request, profesor_nombre):
+    
+    #recibe el nombre del profesor que vamos a modificar
+    
+    profesor = Profesor.objects.get(nombre=profesor_nombre)
+    
+    #Si es metodo POST hago lo mismo que el agregar
+    
+    if request.method == "POST":
+        
+        miFormulario = ProfesorFormulario(request.POST) #aca nos llega toda la info del html
+        
+        print(miFormulario)
+        
+        if miFormulario.is_valid:  #esto es "si pasa la verificacion de django"
+            
+            informacion = miFormulario.cleaned_data
+            
+            profesor.nombre = informacion["nombre"]
+            profesor.apellido = informacion["apellido"]
+            profesor.email = informacion["email"]
+            profesor.profesion = informacion["profesion"]
+            
+            profesor.save()
+            
+            return render(request= "AppCoder/inicio.html") # Aca hacemos que vuelva al inicio despues de  editar
+        
+    #En caso de que no sea post:
+    
+    else:
+        
+         miFormulario = ProfesorFormulario(initial={"nombre": profesor.nombre, "apellido": profesor.apellido, "email": profesor.email, "profesion": profesor.profesion})
+         
+    #Aca vamos al html que si nos permite editar:
+    
+    return render(request,"AppCoder/editarProfesor.html", {"miFormulario":miFormulario, "profesor_nombre":profesor_nombre})
