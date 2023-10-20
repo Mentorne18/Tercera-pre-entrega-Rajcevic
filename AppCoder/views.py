@@ -2,6 +2,14 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import * #para traer Curso de models y usarlo en la validación de datos enviados.
 from AppCoder.forms import *
+from django.views.generic import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.urls import reverse_lazy
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth import login, logout, authenticate
+
+
 
 # Create your views here.
 
@@ -200,3 +208,62 @@ def editarProfesor(request, profesor_nombre):
     #Aca vamos al html que si nos permite editar:
     
     return render(request,"AppCoder/editarProfesor.html", {"miFormulario":miFormulario, "profesor_nombre":profesor_nombre})
+
+
+class CursoList(ListView):
+    
+    model= Curso
+    template_name = "AppCoder/cursos_list.html"
+    
+class CursoDetalle(DetailView):
+    
+    model = Curso
+    template_name = "AppCoder/curso_detalle.html"
+    
+class CursoCreacion(CreateView):
+    
+    model = Curso
+    success_url= "/AppCoder/curso/list"
+    fields = ["nombre", "camada"]
+    
+class CursoUpdate(UpdateView):
+    
+    model = Curso
+    success_url = "/AppCoder/curso/list"
+    fields = ["nombre", "camada"]
+    
+class CursoDelete(DeleteView):
+    
+    model = Curso
+    success_url = "AppCoder/curso/list"
+    
+
+def login_request(request):
+    
+    if request.method == "POST":
+        form = AuthenticationForm(request, data= request.POST)
+        
+        if form.is_valid():
+            usuario = form.cleaned_data.get("username")
+            contra = form.cleaned_data.get("password")
+            
+            user = authenticate(username=usuario, password=contra)
+            
+            
+            if user is not None:
+                login(request, user)
+                
+                return render(request, "AppCoder/index.html", {"mensaje":f"Bienvenido {usuario}"})
+            
+            else:
+                
+                return render(request, "AppCoder/index.html", {"mensaje": "Error, datos incorrectos"})
+            
+        
+        else:
+            
+                return render(request, "AppCoder/index.html", {"mensaje":"Error, formulario erroneo"})
+            
+    form = AuthenticationForm()
+    
+    return render(request, "AppCoder/login.html", {"form":form})

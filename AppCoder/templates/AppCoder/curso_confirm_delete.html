@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curso Borrar</title>
+</head>
+<body>
+    
+
+    <form method="POST">{% csrf_token %}
+        ¿Estas seguro que deseas borrar el curso "{{ object }}"?
+        <input type="submit" value="submit"/>
+    </form>
+
+</body>
