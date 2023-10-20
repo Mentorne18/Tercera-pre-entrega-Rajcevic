@@ -8,6 +8,10 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+
 
 
 
@@ -33,7 +37,7 @@ from django.contrib.auth import login, logout, authenticate
 # def entregables(request):
     
 #     return HttpResponse("vista entregables")    ESTO YA NO VA PORQUE LO REEMPLAZAMOS POR EL RENDER DE LA PLANTILLA
-
+@login_required 
 def inicio(request):
     
     return render(request, "appCoder/index.html")
@@ -220,19 +224,19 @@ class CursoDetalle(DetailView):
     model = Curso
     template_name = "AppCoder/curso_detalle.html"
     
-class CursoCreacion(CreateView):
+class CursoCreacion(LoginRequiredMixin, CreateView):
     
     model = Curso
     success_url= "/AppCoder/curso/list"
     fields = ["nombre", "camada"]
     
-class CursoUpdate(UpdateView):
+class CursoUpdate(LoginRequiredMixin, UpdateView):
     
     model = Curso
     success_url = "/AppCoder/curso/list"
     fields = ["nombre", "camada"]
     
-class CursoDelete(DeleteView):
+class CursoDelete(LoginRequiredMixin, DeleteView):
     
     model = Curso
     success_url = "AppCoder/curso/list"
@@ -267,3 +271,24 @@ def login_request(request):
     form = AuthenticationForm()
     
     return render(request, "AppCoder/login.html", {"form":form})
+
+
+def register(request):
+    
+    if request.method == "POST":
+        
+        #form = UserCreationForm(request.POST)
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            
+            username = form.cleaned_data["username"]
+            form.save()
+            return render(request, "AppCoder/index.html", {"mensaje":"Creacion de usuario exitosa, bienvenido"})
+        
+        
+    else:
+        
+        #form = UserCreationForm()
+        form =UserRegisterForm()
+        
+    return render(request,"AppCoder/registro.html", {"form":form})
