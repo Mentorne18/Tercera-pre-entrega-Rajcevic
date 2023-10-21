@@ -30,6 +30,14 @@
                 <a class="btn btn-primary" href="{% url 'Estudiantes' %}">Estudiantes</a>
                 <a class="btn btn-primary" href="{% url 'Entregables' %}">Entregables</a>
 
+                {% if not request.user.is_authenticated %}
+                <a class="btn btn-primary" href="{% url 'Login' %}">INICIAR</a>
+                {% endif %}
+
+                {% if request.user.is_authenticated %}
+                <p class="text-muted small mb-4 mb-1g-0">Hola,{{user.username}}</p>
+                {% endif %}
+
 
             </div>
         </nav>

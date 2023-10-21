@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from typing import List
+from django.shortcuts import redirect, render, HttpResponse
 from django.http import HttpResponse
 from .models import * #para traer Curso de models y usarlo en la validación de datos enviados.
 from AppCoder.forms import *
@@ -10,6 +11,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.models import User
 
 
 
@@ -40,7 +42,9 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 @login_required 
 def inicio(request):
     
-    return render(request, "appCoder/index.html")
+    avatares = Avatar.objects.filter(user=request.user.id)
+    
+    return render(request, "appCoder/index.html", {"url": avatares[0].imagen.url})
 
 # def cursos(request):
     
@@ -292,3 +296,56 @@ def register(request):
         form =UserRegisterForm()
         
     return render(request,"AppCoder/registro.html", {"form":form})
+
+
+@login_required
+def editarPerfil(request):
+
+      #Instancia del login
+      usuario = request.user
+     
+      #Si es metodo POST hago lo mismo que el agregar
+      if request.method == 'POST':
+            miFormulario = UserEditForm(request.POST) 
+            if miFormulario.is_valid():   #Si pasó la validación de Django
+
+                  informacion = miFormulario.cleaned_data
+            
+                  #Datos que se modificarán
+                  usuario.email = informacion['email']
+                  usuario.password1 = informacion['password1']
+                  usuario.password2 = informacion['password1']
+                  usuario.save()
+
+                  return render(request, "AppCoder/index.html") #Vuelvo al inicio o a donde quieran
+      #En caso que no sea post
+      else: 
+            #Creo el formulario con los datos que voy a modificar
+            miFormulario= UserEditForm(initial={ 'email':usuario.email}) 
+
+      #Voy al html que me permite editar
+      return render(request, "AppCoder/editarPerfil.html", {"miFormulario":miFormulario, "usuario":usuario})
+  
+  
+@login_required
+def agregarAvatar(request):
+      if request.method == 'POST':
+
+            miFormulario = AvatarFormulario(request.POST, request.FILES) #aquí mellega toda la información del html
+
+            if miFormulario.is_valid:   #Si pasó la validación de Django
+
+
+                  u = User.objects.get(username=request.user)
+                
+                  avatar = Avatar (user=u, imagen=miFormulario.cleaned_data['imagen']) 
+      
+                  avatar.save()
+
+                  return render(request, "AppCoder/index.html") #Vuelvo al inicio o a donde quieran
+
+      else: 
+
+            miFormulario= AvatarFormulario() #Formulario vacio para construir el html
+
+      return render(request, "AppCoder/agregarAvatar.html", {"miFormulario":miFormulario})

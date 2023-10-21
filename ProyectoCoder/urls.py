@@ -1,3 +1,7 @@
+from django.conf import settings
+from django.conf.urls.static import static
+
+
 """
 URL configuration for ProyectoCoder project.
 
@@ -23,3 +27,5 @@ urlpatterns = [
     path("AppCoder/", include("AppCoder.urls")), 
     #path('', include("AppCoder.urls")), #con esto, nuestro sitio se inicia directamente en index.html
 ]
+
+urlpatterns+= static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
