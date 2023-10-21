@@ -331,9 +331,9 @@ def editarPerfil(request):
 def agregarAvatar(request):
       if request.method == 'POST':
 
-            miFormulario = AvatarFormulario(request.POST, request.FILES) #aquí mellega toda la información del html
+            miFormulario = AvatarFormulario(request.POST, request.FILES) #aca me llega toda la información del html
 
-            if miFormulario.is_valid:   #Si pasó la validación de Django
+            if miFormulario.is_valid():   #Si pasó la validación de Django
 
 
                   u = User.objects.get(username=request.user)

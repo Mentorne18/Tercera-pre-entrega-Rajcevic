@@ -35,9 +35,10 @@
                 {% endif %}
 
                 {% if request.user.is_authenticated %}
-                <img src="{{(Avatar.objects.filter(user = request.user.id)) [0].imagen.url}}"/>
-                <p class="text-muted small mb-4 mb-1g-0">Hola,{{user.username}}</p>
+                    <img src="{{ request.user.avatar.imagen.url }}" />
+                    <p class="text-muted small mb-4 mb-lg-0">Hola, {{ user.username }}.</p>
                 {% endif %}
+
 
                 
 
@@ -94,6 +95,8 @@
         </header>
 
         {% block contenidoQueCambia %}
+
+                
 
         <!-- Icons Grid-->
         <section class="features-icons bg-light text-center">
